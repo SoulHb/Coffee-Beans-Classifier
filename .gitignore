@@ -1,2 +1,5 @@
-Coffee
+.idea
+src/__pycache__
+src/saved_models
 __pycache__
+src/data
