@@ -34,15 +34,15 @@ def train_loop(train_loader, loss, optimizer, model):
         y = torch.nn.functional.one_hot(y)
         y = y.argmax(1)
         pred = model(X)
-        L = loss(pred, y).item()
+        L = loss(pred, y)
         optimizer.zero_grad()
         L.backward()
         optimizer.step()
-        train_loss += L * X.shape[0]
+        train_loss += L.item() * X.shape[0]
         correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     train_loss = (train_loss / size_dataset)
     accuracy = (correct / size_dataset) * 100
-    print(f"train_loss/epoch: {train_loss.item()}, accuracy/epoch: {accuracy}")
+    print(f"train_loss/epoch: {train_loss}, accuracy/epoch: {accuracy}")
 
 
 def val_loop(val_loader, loss, model):
@@ -87,7 +87,7 @@ def main(args):
             None
         """
     dataset_path = args["data_path"] if args["data_path"] else DATA_PATH
-    csv_file = os.path.join(dataset_path, 'Coffee_Bean.csv')
+    csv_file = os.path.join(dataset_path, 'Coffee Bean.csv')
     save_model_path = args["saved_model_path"] if args["saved_model_path"] else SAVED_MODEL_FOLDER
 
     image_height = args["image_height"] if args["image_height"] else IMAGE_SIZE[0]

@@ -3,7 +3,7 @@ import torch
 import numpy as np
 import os
 from torch.utils.data import Dataset
-from skimage import io
+from PIL import Image
 from sklearn.model_selection import train_test_split
 torch.manual_seed(0)
 np.random.seed(0)
@@ -44,7 +44,13 @@ class CoffeeBeans(Dataset):
                     tuple: A tuple containing the image and its corresponding label.
                 """
         img_path = os.path.join(self.root_dir, self.annotations.iloc[index, 1])
-        image = io.imread(img_path)/255.0
+        # Load image using PIL
+        image = Image.open(img_path).convert("RGB")
+
+        # Normalize the image
+        image = np.array(image) / 255.0
+        # Convert to PIL Image
+        image = Image.fromarray((image * 255).astype(np.uint8))
         y_label = torch.tensor(int(self.annotations.iloc[index, 0]))
         if self.transform:
             image = self.transform(image)
